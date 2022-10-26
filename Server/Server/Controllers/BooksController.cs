@@ -32,6 +32,7 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Book>> PostBook(Book book)
         {
+            // MOdel State Validation 
             if (_context.Books.Any(b => b.Title == book.Title))
             {
                 ModelState.AddModelError("Title", "Book already exist!");

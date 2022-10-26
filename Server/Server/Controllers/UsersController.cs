@@ -41,7 +41,7 @@ namespace Server.Controllers
                 if (_context.Users.Any(u => u.Email == user.Email))
                 {
                     ModelState.AddModelError("Email", "Email already in use!");
-                    Console.WriteLine(user.Email);
+                    // Console.WriteLine(user.Email);
                     return NoContent();
                 }
 
@@ -55,6 +55,36 @@ namespace Server.Controllers
                 return Ok(user);
             }
             return Ok(user);
+        }
+
+        // LOGIN
+        [HttpPost("login")]
+        public async Task<ActionResult<User>> Login(LoginUser logUser)
+        {
+            if (ModelState.IsValid)
+            {
+                User userInDB = _context.Users.FirstOrDefault(u => u.Email == logUser.LoginEmail);
+                if (userInDB == null)
+                {
+                    ModelState.AddModelError("LoginEmail", "Invalid Email/Password");
+                    return NoContent();
+                }
+                var hasher = new PasswordHasher<LoginUser>();
+                var result = hasher.VerifyHashedPassword(logUser, userInDB.Password, logUser.LoginPassword);
+                if (result == 0)
+                {
+                    ModelState.AddModelError("LoginPassword", "Invalid Email/Password");
+                    return NoContent();
+                }
+
+                // HttpContext.Session.SetInt32("userID", userInDB.UserID);
+                return Ok();
+
+            }
+            else
+            {
+                return NoContent();
+            }
         }
 
         // GET: Users/Details/5

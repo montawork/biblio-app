@@ -22,6 +22,7 @@ namespace Server.Models
         [Required(ErrorMessage = "Language is Required")]
         public string Language { get; set; }
         [Required(ErrorMessage = "Category is Required")]
+        public int IsAccepted { get; set; } = 0;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
